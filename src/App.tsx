@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { observer, inject } from 'mobx-react';
+import { Component } from 'react';
+import { compose } from 'recompose';
+import { IUser } from './User';
+
+interface IMyComponentProps {
+  user: IUser
+}
+
+class MyComponent extends Component<IMyComponentProps, {}> {
+  static myStaticProperty = 'myStaticProperty';
+  static myStaticFn = () => 'myStaticFn';
+
+  render() {
+    return (
+      <div>{this.props.user.fullName}</div>
+    )
+  }
+}
+
+const MyComponentComposed = compose<IMyComponentProps, {}>(inject('user'), observer)(MyComponent)
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* @ts-ignore */}
+      {MyComponentComposed.myStaticProperty}<br />
+      {/* @ts-ignore */}
+      {MyComponentComposed.myStaticFn()}
+      <MyComponentComposed />
     </div>
   );
 }
+
 
 export default App;
